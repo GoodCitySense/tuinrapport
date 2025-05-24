@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Good City Sense Dynamische Kaart</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    #map { height: 600px; width: 100%; }
+  </style>
+</head>
+<body>
+
+<h2>Good City Sense Dynamische Kaart</h2>
+<div id="map"></div>
+
+<script>
+// Maak de kaart
+var map = L.map('map').setView([52.1, 5.1], 8); // Nederland als startpunt
+
+// OpenStreetMap tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+// Haal data op uit de API
+fetch('https://api.goodcitysense.nl/statistics/garden-report')
+  .then(response => response.json())
+  .then(result => {
+    var data = result.data;
+    data.forEach(item => {
+      if (item.latitude && item.longitude) {
+        // Bereken de grootte van de cirkel op basis van gardenCount
+        var radius = Math.sqrt(item.gardenCount) * 5; // Pas de schaalfactor aan naar smaak
+        L.circleMarker([item.latitude, item.longitude], {
+          radius: radius,
+          fillColor: "green",
+          color: "darkgreen",
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.6
+        }).addTo(map).bindPopup(
+          "<b>Aantal tuinen:</b> " + item.gardenCount + "<br>" +
+          "<b>Totale oppervlakte:</b> " + item.gardenTotalAreaM2.toFixed(2) + " m²"
+        );
+      }
+    });
+  })
+  .catch(error => console.log('Fout bij ophalen data:', error));
+</script>
+
+</body>
+</html>
