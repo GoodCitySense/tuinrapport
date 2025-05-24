@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Overzicht deelnemers tuinrapport</title>
+  <title>Deelnemers Tuinrapport</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -14,12 +14,19 @@
       color: white;
       text-align: center;
       line-height: 1;
+      background: rgba(0, 128, 0, 0.7);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
     }
   </style>
 </head>
 <body>
 
-<h2>Overzicht van deelnemers aan Tuinrapport</h2>
+<h2>Overzicht Deelnemers Tuinrapport</h2>
 <div id="map"></div>
 
 <script>
@@ -55,12 +62,12 @@ fetch('https://api.goodcitysense.nl/statistics/garden-report')
           "en hun gezamenlijke tuinoppervlak is <b>" + item.gardenTotalAreaM2.toFixed(2) + " m²</b>."
         );
 
-        // Label met gardenCount boven de cirkel
+        // Label met gardenCount mooi gecentreerd
         var myIcon = L.divIcon({
           className: 'circle-label',
           html: item.gardenCount,
-          iconSize: [radius * 2, radius * 2],
-          iconAnchor: [radius, radius]
+          iconSize: [30, 30], // vaste grootte
+          iconAnchor: [15, 15] // midden van het label
         });
 
         L.marker([item.latitude, item.longitude], { icon: myIcon, interactive: false }).addTo(map);
